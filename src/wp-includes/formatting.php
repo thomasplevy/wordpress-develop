@@ -2916,10 +2916,9 @@ function _make_url_clickable_cb( $matches ) {
 		return $matches[0];
 	}
 
+	$rel = 'nofollow';
 	if ( 'comment_text' === current_filter() ) {
-		$rel = 'nofollow ugc';
-	} else {
-		$rel = 'nofollow';
+		$rel = _wp_is_url_internal( $url ) ? 'ugc' : 'nofollow ugc';
 	}
 
 	/**
@@ -2964,10 +2963,9 @@ function _make_web_ftp_clickable_cb( $matches ) {
 		return $matches[0];
 	}
 
+	$rel = 'nofollow';
 	if ( 'comment_text' === current_filter() ) {
-		$rel = 'nofollow ugc';
-	} else {
-		$rel = 'nofollow';
+		$rel = _wp_is_url_internal( $dest ) ? 'ugc' : 'nofollow ugc';
 	}
 
 	/** This filter is documented in wp-includes/formatting.php */
@@ -3136,12 +3134,8 @@ function wp_rel_callback( $matches, $rel ) {
 	$text = $matches[1];
 	$atts = wp_kses_hair( $matches[1], wp_allowed_protocols() );
 
-	if ( ! empty( $atts['href'] ) ) {
-		if ( in_array( strtolower( wp_parse_url( $atts['href']['value'], PHP_URL_SCHEME ) ), array( 'http', 'https' ), true ) ) {
-			if ( strtolower( wp_parse_url( $atts['href']['value'], PHP_URL_HOST ) ) === strtolower( wp_parse_url( home_url(), PHP_URL_HOST ) ) ) {
-				return "<a $text>";
-			}
-		}
+	if ( ! empty( $atts['href'] ) && _wp_is_url_internal( $atts['href']['value'] ) ) {
+		$rel = trim( str_replace( 'nofollow', '', $rel ) );
 	}
 
 	if ( ! empty( $atts['rel'] ) ) {
@@ -3161,7 +3155,42 @@ function wp_rel_callback( $matches, $rel ) {
 		}
 		$text = trim( $html );
 	}
-	return "<a $text rel=\"" . esc_attr( $rel ) . '">';
+
+	$rel_attr = $rel ? ' rel="' . esc_attr( $rel ) . '"' : '';
+
+	return "<a {$text}{$rel_attr}>";
+}
+
+/**
+ * Helper function used to determine if a URL is an internal URL.
+ *
+ * @since [version]
+ *
+ * @param string $href The URL to test.
+ * @return bool Returns true for internal URLs and false for all other URLs.
+ */
+function _wp_is_url_internal( $href ) {
+
+	if ( in_array( strtolower( wp_parse_url( $href, PHP_URL_SCHEME ) ), array( 'http', 'https' ), true ) ) {
+		/**
+		 * Filters the array of URL hosts which are considered internal.
+		 *
+		 * @since [version]
+		 *
+		 * @param array $internal_hosts An array of internal URL hostnames.
+		 */
+		$internal_hosts = apply_filters(
+			'wp_rel_callback_internal_hosts',
+			array(
+				wp_parse_url( home_url(), PHP_URL_HOST ),
+			)
+		);
+		$internal_hosts = array_map( 'strtolower', $internal_hosts );
+		return in_array( strtolower( wp_parse_url( $href, PHP_URL_HOST ) ), $internal_hosts, true );
+	}
+
+	return false;
+
 }
 
 /**

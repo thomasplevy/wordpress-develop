@@ -421,6 +421,7 @@ class Tests_Formatting_MakeClickable extends WP_UnitTestCase {
 
 	/**
 	 * @ticket 48022
+	 * @ticket 56444
 	 * @dataProvider data_add_rel_ugc_in_comments
 	 */
 	public function test_add_rel_ugc_in_comments( $content, $expected ) {
@@ -438,7 +439,12 @@ class Tests_Formatting_MakeClickable extends WP_UnitTestCase {
 	}
 
 	public function data_add_rel_ugc_in_comments() {
+
+		$home_url_http  = set_url_scheme( home_url(), 'http' );
+		$home_url_https = set_url_scheme( home_url(), 'https' );
+
 		return array(
+			// @ticket 48022
 			array(
 				'http://wordpress.org',
 				'<a href="http://wordpress.org" rel="nofollow ugc">http://wordpress.org</a>',
@@ -446,6 +452,19 @@ class Tests_Formatting_MakeClickable extends WP_UnitTestCase {
 			array(
 				'www.wordpress.org',
 				'<p><a href="http://www.wordpress.org" rel="nofollow ugc">http://www.wordpress.org</a>',
+			),
+			// @ticket 56444
+			array(
+				'www.example.org',
+				'<p><a href="http://www.example.org" rel="nofollow ugc">http://www.example.org</a>',
+			),
+			array(
+				$home_url_http,
+				'<a href="' . $home_url_http . '" rel="ugc">' . $home_url_http . '</a>',
+			),
+			array(
+				$home_url_https,
+				'<a href="' . $home_url_https . '" rel="ugc">' . $home_url_https . '</a>',
 			),
 		);
 	}

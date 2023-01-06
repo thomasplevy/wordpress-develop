@@ -99,11 +99,11 @@ class Tests_Formatting_wpRelUgc extends WP_UnitTestCase {
 			),
 			array(
 				'<a href="' . $home_url_http . '/some-url">Home URL (http)</a>',
-				'<a href="' . $home_url_http . '/some-url">Home URL (http)</a>',
+				'<a href="' . $home_url_http . '/some-url" rel="ugc">Home URL (http)</a>',
 			),
 			array(
 				'<a href="' . $home_url_https . '/some-url">Home URL (https)</a>',
-				'<a href="' . $home_url_https . '/some-url">Home URL (https)</a>',
+				'<a href="' . $home_url_https . '/some-url" rel="ugc">Home URL (https)</a>',
 			),
 		);
 	}
