@@ -218,6 +218,7 @@ function get_comment_author_email_link( $linktext = '', $before = '', $after = '
  * @return string The comment author name or HTML link for author's URL.
  */
 function get_comment_author_link( $comment_ID = 0 ) {
+
 	$comment = get_comment( $comment_ID );
 	$url     = get_comment_author_url( $comment );
 	$author  = get_comment_author( $comment );
@@ -225,7 +226,42 @@ function get_comment_author_link( $comment_ID = 0 ) {
 	if ( empty( $url ) || 'http://' === $url ) {
 		$return = $author;
 	} else {
-		$return = "<a href='$url' rel='external nofollow ugc' class='url'>$author</a>";
+
+		$rel_parts = array();
+		if ( ! wp_is_internal_link( $url ) ) {
+			$rel_parts = array( 'external', 'nofollow' );
+		}
+
+		/**
+		 * Filters the list of non-ugc comment authors.
+		 *
+		 * When displaying the comment author link for any commenters in this list, the "ugc" rel attribute
+		 * will not be added to the anchor's rel attribute.
+		 *
+		 * @since [version]
+		 *
+		 * @param string[] $comment_authors An array of comment author usernames.
+		 */
+		$non_ugc_comment_authors = apply_filters( 'non_ugc_comment_authors', array() );
+		if ( ! in_array( $author, $non_ugc_comment_authors, true ) ) {
+			$rel_parts[] = 'ugc';
+		}
+
+		$rel = implode( ' ', $rel_parts );
+
+		/**
+		 * Filters the rel attribute of the comment author's link.
+		 *
+		 * @since [version]
+		 *
+		 * @param string $rel        The rel attribute value.
+		 * @param string $author     The comment author's username.
+		 * @param string $comment_ID The comment ID as a numeric string.
+		 */
+		$rel = apply_filters( 'comment_author_link_rel', $rel, $author, $comment->comment_ID );
+		$rel = esc_attr( $rel );
+
+		$return = "<a href='$url' rel='$rel' class='url'>$author</a>";
 	}
 
 	/**
