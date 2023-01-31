@@ -2981,7 +2981,7 @@ function _make_clickable_rel_attr( $url ) {
 
 	$rel_parts        = array();
 	$scheme           = strtolower( wp_parse_url( $url, PHP_URL_SCHEME ) );
-	$nofollow_schemes = array_intersect( wp_allowed_protocols(), array( 'https', 'http') );
+	$nofollow_schemes = array_intersect( wp_allowed_protocols(), array( 'https', 'http' ) );
 
 	// Apply "nofollow" to external links with qualifying URL schemes (mailto:, tel:, etc... shouldn't be followed).
 	if ( ! wp_is_internal_link( $url ) && in_array( $scheme, $nofollow_schemes, true ) ) {
