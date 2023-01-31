@@ -218,7 +218,6 @@ function get_comment_author_email_link( $linktext = '', $before = '', $after = '
  * @return string The comment author name or HTML link for author's URL.
  */
 function get_comment_author_link( $comment_ID = 0 ) {
-
 	$comment = get_comment( $comment_ID );
 	$url     = get_comment_author_url( $comment );
 	$author  = get_comment_author( $comment );
