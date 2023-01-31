@@ -4688,3 +4688,50 @@ function get_the_privacy_policy_link( $before = '', $after = '' ) {
 
 	return '';
 }
+
+/**
+ * Returns an array of URL hosts which are considered to be internal hosts.
+ *
+ * @since [version]
+ *
+ * @return string[] An array of URL hosts.
+ */
+function wp_internal_hosts() {
+	/**
+	 * Filters the array of URL hosts which are considered internal.
+	 *
+	 * @since [version]
+	 *
+	 * @param array $internal_hosts An array of internal URL hostnames.
+	 */
+	$internal_hosts = apply_filters(
+		'wp_internal_hosts',
+		array(
+			wp_parse_url( home_url(), PHP_URL_HOST ),
+		)
+	);
+	return $internal_hosts;
+}
+
+/**
+ * Determines whether or not the specified URL is of a host included in the internal hosts list.
+ *
+ * @see wp_internal_hosts()
+ *
+ * @since [version]
+ *
+ * @param string $link The URL to test.
+ * @return bool Returns true for internal URLs and false for all other URLs.
+ */
+function wp_is_internal_link( $link ) {
+
+	$link = strtolower( $link );
+
+	if ( in_array( wp_parse_url( $link, PHP_URL_SCHEME ), wp_allowed_protocols(), true ) ) {
+		$internal_hosts = array_map( 'strtolower', wp_internal_hosts() );
+		return in_array( wp_parse_url( $link, PHP_URL_HOST ), $internal_hosts, true );
+	}
+
+	return false;
+
+}
