@@ -240,8 +240,8 @@ function get_comment_author_link( $comment_ID = 0 ) {
 		 * @since [version]
 		 *
 		 * @param string[]   $rel_parts An array of strings representing the rel
-		 * 								tags which will be joined into the anchor's
-		 * 								rel attribute.
+		 *                              tags which will be joined into the anchor's
+		 *                              rel attribute.
 		 * @param WP_Comment $comment   The comment object
 		 */
 		$rel_parts = apply_filters( 'comment_author_link_rel', $rel_parts, $comment );

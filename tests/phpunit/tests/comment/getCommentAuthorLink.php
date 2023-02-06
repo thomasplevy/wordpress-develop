@@ -13,12 +13,16 @@ class Tests_Comment_GetCommentAuthorLink extends WP_UnitTestCase {
 
 		self::$comments = array(
 			'external_url' => $factory->comment->create_and_get(),
-			'internal_url' => $factory->comment->create_and_get( array(
-				'comment_author_url' => home_url( 'comment-author-url' ),
-			) ),
-			'empty_url'    => $factory->comment->create_and_get( array(
-				'comment_author_url' => '',
-			) ),
+			'internal_url' => $factory->comment->create_and_get(
+				array(
+					'comment_author_url' => home_url( 'comment-author-url' ),
+				)
+			),
+			'empty_url'    => $factory->comment->create_and_get(
+				array(
+					'comment_author_url' => '',
+				)
+			),
 		);
 	}
 
