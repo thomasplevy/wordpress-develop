@@ -248,6 +248,7 @@ function get_comment_author_link( $comment_ID = 0 ) {
 
 		$rel = implode( ' ', $rel_parts );
 		$rel = esc_attr( $rel );
+		// empty space before rel necessary for later sprintf.
 		$rel = ! empty( $rel ) ? sprintf( ' rel="%s"', $rel ) : '';
 
 		$return = sprintf(
@@ -1341,7 +1342,6 @@ function wp_is_comment_ugc( $comment_ID = 0 ) {
 	 * @param WP_Comment $comment    The comment object.
 	 */
 	return apply_filters( 'comment_is_ugc', $is_ugc, $comment_ID, $comment );
-
 }
 
 /**

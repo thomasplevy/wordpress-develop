@@ -2951,7 +2951,7 @@ function _make_web_ftp_clickable_cb( $matches ) {
 	}
 
 	$rel_attr = _make_clickable_rel_attr( $dest );
-	return $matches[1] . "<a href=\"$dest\"$rel_attr>$dest</a>$ret";
+	return $matches[1] . "<a href='{$dest}'{$rel_attr}>{$dest}</a>{$ret}";
 }
 
 /**
@@ -3179,7 +3179,7 @@ function wp_rel_callback( $matches, $rel ) {
 
 	$rel_attr = $rel ? ' rel="' . esc_attr( $rel ) . '"' : '';
 
-	return "<a {$text}{$rel_attr}>";
+	return "<a {$text} {$rel_attr}>";
 }
 
 /**
