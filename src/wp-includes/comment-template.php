@@ -1313,38 +1313,6 @@ function pings_open( $post = null ) {
 }
 
 /**
- * Determines if the specified content is considered to be user-generated content.
- *
- * This is used by comment template functions to determine whether or not to apply the "ugc" tag to the rel
- * attribute of anchors within or related-to
- *
- * @since [version]
- *
- * @param int|WP_Comment $comment_ID Optional. WP_Comment or the ID of the comment for which to retrieve the author.
- *                                   Default current comment.
- * @return string The comment author
- */
-function wp_is_comment_ugc( $comment_ID = 0 ) {
-	$comment    = get_comment( $comment_ID );
-	$comment_ID = ! empty( $comment->comment_ID ) ? $comment->comment_ID : (string) $comment_ID;
-
-	// Comments are assumed to be UGC by default.
-	$is_ugc = true;
-
-	/**
-	 * Filters whether or not a comment is considered to be user-generated content.
-	 *
-	 * @since 1.5.0
-	 * @since 4.1.0 The `$comment_ID` and `$comment` parameters were added.
-	 *
-	 * @param bool       $is_ugc     Whether or not the comment is considered to be user-generated content.
-	 * @param string     $comment_ID The comment ID as a numeric string.
-	 * @param WP_Comment $comment    The comment object.
-	 */
-	return apply_filters( 'comment_is_ugc', $is_ugc, $comment_ID, $comment );
-}
-
-/**
  * Displays form token for unfiltered comments.
  *
  * Will only display nonce token if the current user has permissions for
